@@ -5,6 +5,8 @@ import sys
 import random
 import ast
 import datetime
+from typing import List
+import json
 
 import fitz  
 import ipywidgets as widgets
@@ -39,26 +41,8 @@ def process_llm_response(llm_output):
     return {"answer": answer, "pages": sorted(list(page_numbers))}
 
 class QuestionBank:
-    def __init__(self, save_path: str = '.'):
-        self.topics = {"organised markets": [], 
-                       "approved clearing house": [], 
-                       "recognised market operator": [],
-                       "licensed trade repository": [], 
-                       "power of Authority to revoke approval and recognition": [], 
-                       "regulation of approved exchanges": [],
-                       "regulation of licensed trade repositories": [], 
-                       "supervisory powers": [], 
-                       "investigative powers of Authority": [],
-                       "prohibited conduct": [],
-                       "insider trading": [], 
-                       "civil liability": [], 
-                       "voluntary transfer of business": [],
-                       "disclosure of interests": [], 
-                       "short selling": [], 
-                       "take-over offers": [], 
-                       "supervision and investigation": [],
-                       "market conduct": [], 
-                       "offers of investments": []}
+    def __init__(self, topics:List[str], save_path: str = '.'):
+        self.topics = {topic: [] for topic in topics}
         
         self.save_path = save_path
     
@@ -249,6 +233,11 @@ if __name__ == '__main__':
     load_dotenv()
 
     # set random seed for reproducidibility
+    CONFIG_FOLDER = 'config'
+    GEN_CONFIG_PATH = os.path.join(CONFIG_FOLDER, 'gen_config.json')
+    GEN_CONFIG = json.load(open(GEN_CONFIG_PATH, 'r'))
+    print(f'Loaded configurations:\n{json.dumps(GEN_CONFIG, indent=4)}\n\n')
+
     RANDOMSEED = 42
     MODELNAME = 'gpt-4o-mini'
     INPUTFOLDER = 'inputs'
@@ -267,7 +256,8 @@ if __name__ == '__main__':
 
     number_of_topics = get_user_input_num_topics()
 
-    question_bank = QuestionBank(save_path=SAVEFOLDER)
+    question_bank = QuestionBank(topics = GEN_CONFIG['topics'],
+                                 save_path=SAVEFOLDER)
     question_bank.generate_questions(number_of_topics)
 
     print(f'Questions generated and saved at {SAVEFOLDER}')

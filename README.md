@@ -21,6 +21,9 @@ Saves questions in the output folder.</p>
 ### KristalChatbot.ipnyb
 <p>The Jupyter Notebook written by Kristal Akademy to generate questions to be saved in output folder.</p>
 
+### config/gen_config.json
+<p>To change the topics used to generate questions-answers, edit the gen_config.json's topics attribute</p>
+
 > Disclaimer: Make sure to delete output folder if wanting to generate new questions.
 
 
