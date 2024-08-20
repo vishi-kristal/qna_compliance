@@ -94,6 +94,8 @@ def main():
         st.session_state.selected_questions = []
     if "shuffled_options" not in st.session_state:
         st.session_state.shuffled_options = []
+    if "answer_submitted" not in st.session_state:
+        st.session_state.answer_submitted = False
 
     # Display Application Title
     st.title("Quiz")
@@ -146,7 +148,9 @@ def main():
             user_answer = st.radio("Select your answer:", options, index=None, key=f"question_{st.session_state.q_index}")
 
             if st.button("Submit Answer"):
+
                 if user_answer:
+                    st.session_state['answer_submitted'] = True
                     if user_answer == parsed_question['correct_answer']['answer']:
                         st.success("Correct!")
                         st.session_state.score += 1
@@ -157,12 +161,21 @@ def main():
                     st.write("Explanation:")
                     st.write(parsed_question['explanation'])
                     st.write(f"Relevant pages: {', '.join(map(str, parsed_question['explanation_pages']))}")
-                    
-                    if st.button("Next Question"):
-                        iterate_question()
-                        st.rerun()
                 else:
                     st.warning("Please select an answer before submitting.")
+
+            # nesting buttons doesn't work
+            # clicking this button causes a rerun of the app which will reset "Submit Answer" button to be unpressed
+            # thus this doesn't work
+            # https://discuss.streamlit.io/t/3-nested-buttons/30468/2
+            # so it doesn't actually run "Next Question" button
+            if st.session_state['answer_submitted']:
+                if st.button("Next Question"):
+                    iterate_question()
+                    # reset this
+                    st.session_state.answer_submitted = False
+                    st.rerun()
+
     # Show score
     elif st.session_state.show_score:
         st.write(f"Quiz completed! Your score: {st.session_state.score}/{len(st.session_state.selected_questions)}")
