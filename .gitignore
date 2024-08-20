@@ -164,5 +164,6 @@ cython_debug/
 # ignore questions and securities book
 questions_*
 Securities_*
-.env
 question_bank.csv
+questions
+test.csv
