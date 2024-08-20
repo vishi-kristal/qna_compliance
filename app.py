@@ -6,7 +6,7 @@ import os
 import ast
 
 def read_csv():
-    file_path = "question_bank.csv"
+    file_path = os.path.join('output', "question_bank.csv")
     try:
         with open(file_path, 'r', newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
@@ -109,7 +109,7 @@ def main():
         if name:
             st.session_state.name = name
             st.session_state.show_topic_selection = True
-            st.experimental_rerun()
+            st.rerun()
 
     # Topic selection
     elif st.session_state.show_topic_selection:
@@ -160,7 +160,7 @@ def main():
                     
                     if st.button("Next Question"):
                         iterate_question()
-                        st.experimental_rerun()
+                        st.rerun()
                 else:
                     st.warning("Please select an answer before submitting.")
     # Show score
@@ -168,7 +168,7 @@ def main():
         st.write(f"Quiz completed! Your score: {st.session_state.score}/{len(st.session_state.selected_questions)}")
         if st.button("Start New Quiz"):
             start_new_quiz()
-            st.experimental_rerun()
+            st.rerun()
 
 if __name__ == "__main__":
     main()
