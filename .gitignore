@@ -163,7 +163,7 @@ cython_debug/
 
 # ignore questions and securities book
 questions_*
-inputs
+#inputs
 #question_bank.csv
 questions
 test.csv
