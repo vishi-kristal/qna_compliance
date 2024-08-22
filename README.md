@@ -14,8 +14,9 @@ Link: https://qnacompliance-mzvkvu25nbmeamnal7qwy6.streamlit.app/
 - Make sure ./output/question_bank.csv exists before running script.
 - Writes results to Google Sheets: 
     - Google sheets link: https://docs.google.com/spreadsheets/d/1V2px2V_ez_7qspDRvMrrec2VENdhXBbboa9rMxxZ25g/edit?usp=sharing
-    - Follow this for setup: https://github.com/streamlit/gsheets-connection?tab=readme-ov-file#service-account--crud-example
-    - Follow this for setting up connection: https://docs.streamlit.io/develop/tutorials/databases/private-gsheet
+    - Using gspread to append to google sheets
+    - Follow this tutorial to setup API key and access: https://docs.gspread.org/en/latest/oauth2.html
+    - Save the json file's contents to the Streamlit `secrets.toml` file on streamlit cloud settings
     - <strong>DO NOT COMMIT/PUSH PRIVATE API KEY IN GITHUB. PLEASE ADD TO .GITIGNORE BEFORE PUSHING.</strong>
 </p>
 
