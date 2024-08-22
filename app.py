@@ -10,6 +10,7 @@ from typing import List
 
 import streamlit as st
 import pandas as pd
+import pytz
 
 import gspread
 
@@ -118,7 +119,7 @@ def save_score_ghseets():
     spreadsheet = gc.open_by_url(secrets_connection['spreadsheet'])
     quiz_log = spreadsheet.get_worksheet(0)
 
-    now = datetime.now()
+    now = datetime.now(pytz.timezone('Singapore'))
     datetime_str = str(now.strftime("%d/%m/%Y, %H:%M:%S"))
 
     score_data = {
