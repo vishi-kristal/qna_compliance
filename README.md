@@ -13,7 +13,6 @@ Streamlit app file to be run by Streamlit community cloud
 - It reads from the question_bank.csv in the output folder.
 - Make sure ./output/question_bank.csv exists before running script.
 - Writes results to Google Sheets: 
-  - Google sheets link: https://docs.google.com/spreadsheets/d/1V2px2V_ez_7qspDRvMrrec2VENdhXBbboa9rMxxZ25g/edit?usp=sharing
     - Using gspread to append to google sheets
     - Follow this tutorial to setup API key and access: https://docs.gspread.org/en/latest/oauth2.html
     - Save the json file's contents to the Streamlit `secrets.toml` file on streamlit cloud settings
