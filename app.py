@@ -80,7 +80,7 @@ def start_quiz():
     st.session_state.shuffled_options = []
 
     #st.session_state.selected_questions = [i for i, q in enumerate(st.session_state.question_bank) if q['topic'] in st.session_state.selected_topics]
-    st.session_state.selected_questions = sample_questions_per_topic(st.session_state['config'].get('number_of_questions_per_topic', -1),
+    st.session_state.selected_questions = sample_questions_per_topic(st.session_state['config'].get('number of topics per question', -1),
                                                                      st.session_state.selected_topics, 
                                                                      st.session_state.question_bank)
     random.shuffle(st.session_state.selected_questions)
@@ -119,7 +119,7 @@ def save_score_ghseets():
     now = datetime.now(pytz.timezone('Singapore'))
     datetime_str = str(now.strftime("%d/%m/%Y, %H:%M:%S"))
     st.session_state.score = sum(st.session_state.score_dict.values())
-    percent_score = round(st.session_state.score / len(st.session_state.selected_questions) * 100, 2)
+    percent_score = round(st.session_state.score / len(st.session_state.selected_questions), 2)
 
     score_data = {
         "Datetime_completed": datetime_str,
