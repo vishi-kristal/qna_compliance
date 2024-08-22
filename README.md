@@ -10,8 +10,14 @@ Link: https://qnacompliance-mzvkvu25nbmeamnal7qwy6.streamlit.app/
 ## Directory and Files
 ### app.py
 <p>Streamlit app file to be run by Streamlit community cloud
-It reads from the question_bank.csv in the output folder.
-Make sure ./output/question_bank.csv exists before running script.</p>
+- It reads from the question_bank.csv in the output folder.
+- Make sure ./output/question_bank.csv exists before running script.
+- Writes results to Google Sheets: 
+    - Google sheets link: https://docs.google.com/spreadsheets/d/1V2px2V_ez_7qspDRvMrrec2VENdhXBbboa9rMxxZ25g/edit?usp=sharing
+    - Follow this for setup: https://github.com/streamlit/gsheets-connection?tab=readme-ov-file#service-account--crud-example
+    - Follow this for setting up connection: https://docs.streamlit.io/develop/tutorials/databases/private-gsheet
+    - <strong>DO NOT COMMIT/PUSH PRIVATE API KEY IN GITHUB. PLEASE ADD TO .GITIGNORE BEFORE PUSHING.</strong>
+</p>
 
 ### generate_questions.py
 <p>Python script to generate questions. Code is taken from the KristalChatbot.ipynb Jupyter notebook.

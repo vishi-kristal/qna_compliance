@@ -169,3 +169,6 @@ questions
 test.csv
 .DS_Store
 scores.csv
+credentials.json
+credentials_*.json
+.streamlit/secrets.toml

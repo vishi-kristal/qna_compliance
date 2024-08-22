@@ -5,10 +5,13 @@ import ast
 import random
 import json
 import functools
+from datetime import datetime
 from typing import List
 
 import streamlit as st
 import pandas as pd
+
+import gspread
 
 def read_csv():
     file_path = os.path.join('output', "question_bank.csv")
@@ -90,9 +93,9 @@ def iterate_question():
     if st.session_state.q_index >= len(st.session_state.selected_questions):
         st.session_state.show_quiz_mode = False
         st.session_state.show_score = True
-        save_score()
+        save_score_ghseets()
 
-def save_score():
+def save_score_local():
     score_file = "scores.csv"
     score_data = {
         "Name": st.session_state.name,
@@ -105,6 +108,30 @@ def save_score():
     else:
         pd.DataFrame([score_data]).to_csv(score_file, mode='a', header=False, index=False)
 
+def save_score_ghseets():
+    secrets_connection = st.secrets['gsheets']
+
+    credentials = {key: val for key,val in secrets_connection.items() if key != 'spreadsheet'}
+    gc = gspread.service_account_from_dict(credentials)
+
+    
+    spreadsheet = gc.open_by_url(secrets_connection['spreadsheet'])
+    quiz_log = spreadsheet.get_worksheet(0)
+
+    now = datetime.now()
+    datetime_str = str(now.strftime("%d/%m/%Y, %H:%M:%S"))
+
+    score_data = {
+        "Datetime_completed": datetime_str,
+        "Name": st.session_state.name,
+        "Topics Selected": str(st.session_state.selected_topics),
+        "Total Questions": len(st.session_state.selected_questions),
+        "Score": st.session_state.score
+    }
+
+    row = list(score_data.values())
+    quiz_log.append_row(row, table_range="A1:E1")
+    
 def start_new_quiz():
     st.session_state.show_score = False
     st.session_state.show_topic_selection = True
