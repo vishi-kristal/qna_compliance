@@ -45,9 +45,6 @@ def parse_question(question_row):
         st.error(f"Error parsing question: {e}")
         return None
 
-def sample_questions(number_of_questions: int) -> List[str]:
-    pass
-
 def name_to_topic(name):
     return name.split(" - ")[0]
 
@@ -138,6 +135,10 @@ def start_new_quiz():
     st.session_state.show_topic_selection = True
     st.session_state.selected_topics = []
 
+def click_radio_callback():
+    """Callback for streamlit radio to hide the `next question` button
+If the user changes answer"""
+    st.session_state['answer_submitted'] = False
 # Main Streamlit app
 def main():
     if "name" not in st.session_state:
@@ -219,7 +220,9 @@ def main():
 
             st.write(f"Question {st.session_state.q_index + 1} of {len(st.session_state.selected_questions)}")
             st.write(parsed_question['question']['answer'])
-            user_answer = st.radio("Select your answer:", options, index=None, key=f"question_{st.session_state.q_index}")
+            user_answer = st.radio("Select your answer:", options, index=None, 
+                                   key=f"question_{st.session_state.q_index}",
+                                   on_change = click_radio_callback)
 
             if st.button("Submit Answer"):
 
