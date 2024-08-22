@@ -83,6 +83,7 @@ def start_quiz(RUN_CONFIG):
                                                                      st.session_state.selected_topics, 
                                                                      st.session_state.question_bank)
     random.shuffle(st.session_state.selected_questions)
+    st.rerun()
 
 def iterate_question():
     st.session_state.q_index += 1
