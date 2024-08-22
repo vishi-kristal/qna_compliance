@@ -132,7 +132,6 @@ def save_score_ghseets():
 
     row = list(score_data.values())
     quiz_log.append_row(row, table_range="A1:F1")
-    gc.session.close()
     
 def start_new_quiz():
     st.session_state.show_score = False
@@ -162,8 +161,6 @@ def load_config_from_gsheets():
             value = row[1]
 
         config_dict[row[0]] = value
-    
-    gc.session.close()
 
     return config_dict
 # Main Streamlit app
