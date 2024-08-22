@@ -1,9 +1,14 @@
-import streamlit as st
-import pandas as pd
 import random
 import csv
 import os
 import ast
+import random
+import json
+import functools
+from typing import List
+
+import streamlit as st
+import pandas as pd
 
 def read_csv():
     file_path = os.path.join('output', "question_bank.csv")
@@ -12,7 +17,7 @@ def read_csv():
             reader = csv.DictReader(csvfile)
             st.session_state.question_bank = list(reader)
         # Extract unique topics from the question bank
-        st.session_state.topics_list = list(set(row['topic'] for row in st.session_state.question_bank))
+        st.session_state.topics_list = sorted(list(set(row['topic'] for row in st.session_state.question_bank)))
     except FileNotFoundError:
         st.error(f"File not found: {file_path}")
     except Exception as e:
@@ -36,17 +41,47 @@ def parse_question(question_row):
         st.error(f"Error parsing question: {e}")
         return None
 
+def sample_questions(number_of_questions: int) -> List[str]:
+    pass
+
 def name_to_topic(name):
     return name.split(" - ")[0]
 
-def start_quiz():
+def start_quiz(RUN_CONFIG):
+    def sample_questions_per_topic(num_q_per_topic:int, selected_topics:List[str], question_bank:List[dict]) -> List[int]:
+        """might be a better way to do this, but this is quick implementation
+        could use pandas to make this minimally faster"""
+
+        # store indexes of rows 
+        if num_q_per_topic > 0:
+            topic_question_bank = {}
+            for i, row in enumerate(question_bank):
+                if row['topic'] in selected_topics:
+                    topic_question_bank.setdefault(row['topic'], [])
+                    topic_question_bank[row['topic']].append(i)
+            
+            SELECTED_QUESTIONS_IS_EMPTY = len(topic_question_bank.values()) == 0
+            if not SELECTED_QUESTIONS_IS_EMPTY:
+                for topic in topic_question_bank:
+                    topic_question_bank[topic] = random.sample(topic_question_bank[topic], num_q_per_topic)
+                
+                return functools.reduce(lambda a,b: a+b, topic_question_bank.values())
+            else:
+                return []
+        else:
+            return [i for i, q in enumerate(question_bank) if q['topic'] in selected_topics]
+
     st.session_state.show_quiz_mode = True
     st.session_state.show_topic_selection = False
     st.session_state.q_index = 0
     st.session_state.score = 0
     st.session_state.selected_questions = []
     st.session_state.shuffled_options = []
-    st.session_state.selected_questions = [i for i, q in enumerate(st.session_state.question_bank) if q['topic'] in st.session_state.selected_topics]
+
+    #st.session_state.selected_questions = [i for i, q in enumerate(st.session_state.question_bank) if q['topic'] in st.session_state.selected_topics]
+    st.session_state.selected_questions = sample_questions_per_topic(RUN_CONFIG.get('number_of_questions_per_topic', -1),
+                                                                     st.session_state.selected_topics, 
+                                                                     st.session_state.question_bank)
     random.shuffle(st.session_state.selected_questions)
 
 def iterate_question():
@@ -97,6 +132,16 @@ def main():
     if "answer_submitted" not in st.session_state:
         st.session_state.answer_submitted = False
 
+    RANDOM_SEED = 42
+    random.seed(RANDOM_SEED)
+
+    CONFIG_FOLDER = 'config'
+    RUN_CONFIG_PATH = os.path.join(CONFIG_FOLDER, 'run_config.json')
+
+    # Read config file
+    with open(RUN_CONFIG_PATH, 'r') as f_in:
+        RUN_CONFIG = json.load(f_in)
+
     # Display Application Title
     st.title("Quiz")
     st.write("Securities and Futures Act 2001")
@@ -126,7 +171,7 @@ def main():
         
         if st.button("Start Quiz"):
             if st.session_state.selected_topics:
-                start_quiz()
+                start_quiz(RUN_CONFIG)
             else:
                 st.warning("Please select at least one topic.")
 
@@ -169,6 +214,7 @@ def main():
             # thus this doesn't work
             # https://discuss.streamlit.io/t/3-nested-buttons/30468/2
             # so it doesn't actually run "Next Question" button
+            # -nealson
             if st.session_state['answer_submitted']:
                 if st.button("Next Question"):
                     iterate_question()

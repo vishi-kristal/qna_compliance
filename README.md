@@ -24,6 +24,10 @@ Saves questions in the output folder.</p>
 ### config/gen_config.json
 <p>To change the topics used to generate questions-answers, edit the gen_config.json's topics attribute</p>
 
+### config/run_config.json
+<p>To change the quiz configurations like how many questions per topic to be outputted
+- Set `number_of_questions_per_topic` to -1 to show all questions per topic</p>
+
 > Disclaimer: Make sure to delete output folder if wanting to generate new questions.
 
 
