@@ -1,4 +1,10 @@
 streamlit
 pandas==2.2.2
 gspread
-pytz
+pytzSZZZSSAAZSAAAAAAAAAA
+PyMuPDF
+ipywidgets
+Python-dotenv
+Langchain
+Langchain-chroma
+langchain-openai
