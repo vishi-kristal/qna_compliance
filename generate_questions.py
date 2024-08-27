@@ -8,7 +8,7 @@ import datetime
 from typing import List
 import json
 
-import fitz 
+import fitz  
 import ipywidgets as widgets
 from dotenv import load_dotenv
 
@@ -20,6 +20,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
+from langchain_core.prompts.chat import ChatPromptTemplate
 
 def extract_text_from_pdf(pdf_path):
     doc = fitz.open(pdf_path)
@@ -117,7 +118,7 @@ class QuestionBank:
                                  'explanation_pages': explanation_pages
                                  }
                     
-                    header = f'{','.join(bank_data.keys())}\n'
+                    header = f"{','.join(bank_data.keys())}\n"
 
                     # read first line
                     f_out.seek(0)
@@ -161,9 +162,10 @@ Question: {question}
 Context: {context} 
 Answer:"""
 
+    promptTemplate = ChatPromptTemplate.from_template(prompt)
     rag_chain = (
     {"context": retriever | format_docs, "question": RunnablePassthrough()}
-    | prompt
+    | promptTemplate
     | llm
     | StrOutputParser()
     | process_llm_response
